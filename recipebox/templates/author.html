@@ -1,0 +1,8 @@
+<!-- The author detail page contains a list of links to all recipes published by that author -->
+<a href="/">home</a>
+<a href="/addrecipe">add recipe</a>
+<a href="/addauthor">add Author</a>
+
+{% for foo in stories %}
+<h2><a href="/recipe/{{ foo.id }}">{{ foo.title }}</a> by {{foo.author.name}} </h2>
+{% endfor %}

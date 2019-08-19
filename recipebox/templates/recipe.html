@@ -1,0 +1,17 @@
+<!-- Clicking on a recipe title takes you to the 
+    recipe detail page, and clicking on the author name 
+    takes you to the author detail page -->
+<a href="/">home</a>
+<a href="/addrecipe">add recipe</a>
+<a href="/addauthor">add Author</a>
+
+<!-- <h1>recipe</h1>
+<h2>{{stories}}</h2> -->
+
+
+<h1>{{ stories.title }}</h1>
+<h2>What it is: {{ stories.description}}</h2>
+<h2>How long: {{ stories.time_required }}</h2>
+<h2>How to make: {{ stories.instructions}}</h2>
+<h2>Chef: <a href="/author/{{ stories.author.id }}">{{ stories.author.name}}</a></h2>
+

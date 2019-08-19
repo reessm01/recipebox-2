@@ -1,0 +1,11 @@
+<a href="/">home</a>
+<a href="/addrecipe">add recipe</a>
+<a href="/addauthor">add Author</a>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' value='submit'>
+</form>
+
+<h2>hello {{form.user.username}}</h2>
