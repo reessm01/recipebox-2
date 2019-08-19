@@ -17,12 +17,14 @@ def index(request, *args, **kwargs):
     return render(request, html, {'stories': items})
 
 def recipeurl(request, id):
-
+    u = request.user
     html = "recipe.html"
+    disabled = True
+    _Recipe = Recipe.objects.get(id=id)
+    if u == _Recipe.author.user or u.is_staff:
+        disabled = False
 
-    items = Recipe.objects.get(id=id)
-
-    return render(request, html, {'stories': items})
+    return render(request, html, {'stories': _Recipe, 'disabled': disabled})
 
 def editrecipe(request, id):
     u = request.user
@@ -39,6 +41,10 @@ def editrecipe(request, id):
             })
 
             return render(request, page, {'form': form})
+        else:
+            page = 'recipe.html'
+
+            return render(request, page, {'stories': _Recipe, 'disabled': True})
 
     elif request.method == 'POST':
         page = 'recipe.html'
@@ -58,7 +64,10 @@ def editrecipe(request, id):
             form = RecipeForm(request.POST)
             return render(request, page, {'form': form})        
 
+    else:
+        page = 'recipe.html'
 
+        render(request, page, {'stories': _Recipe, 'disabled': True})
 
 def authorurl(request, id):
 
