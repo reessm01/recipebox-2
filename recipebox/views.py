@@ -156,3 +156,14 @@ from django.contrib.auth import logout
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('homepage'))
+
+@login_required
+def favorite(request, id):
+    if request.method == 'GET':
+        u = request.user
+        _Recipe = Recipe.objects.get(id=id)
+
+        _Recipe.is_fave = not _Recipe.is_fave
+        _Recipe.save()
+
+        return HttpResponseRedirect(f'/recipe/{id}')
