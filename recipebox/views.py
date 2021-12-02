@@ -17,12 +17,57 @@ def index(request, *args, **kwargs):
     return render(request, html, {'stories': items})
 
 def recipeurl(request, id):
-
+    u = request.user
     html = "recipe.html"
+    disabled = True
+    _Recipe = Recipe.objects.get(id=id)
+    if u == _Recipe.author.user or u.is_staff:
+        disabled = False
 
-    items = Recipe.objects.get(id=id)
+    return render(request, html, {'stories': _Recipe, 'disabled': disabled})
 
-    return render(request, html, {'stories': items})
+def editrecipe(request, id):
+    u = request.user
+    page = 'generic_form.html'
+    _Recipe = Recipe.objects.get(id=id)
+    if request.method == 'GET':
+        if u == _Recipe.author.user or u.is_staff:
+            form = RecipeForm(initial={
+                'title': _Recipe.title,
+                'description': _Recipe.description,
+                'time_required': _Recipe.time_required,
+                'instructions': _Recipe.instructions,
+                'author': _Recipe.author
+            })
+
+            return render(request, page, {'form': form})
+        else:
+            page = 'recipe.html'
+
+            return render(request, page, {'stories': _Recipe, 'disabled': True})
+
+    elif request.method == 'POST':
+        page = 'recipe.html'
+        form = RecipeForm(request.POST)
+        if (u == _Recipe.author.user or u.is_staff) and form.is_valid():
+            data = form.cleaned_data
+            _Recipe.title = data['title']
+            _Recipe.description = data['description']
+            _Recipe.time_required = data['time_required']
+            _Recipe.instructions = data['instructions']
+            _Recipe.author = data['author']
+
+            _Recipe.save()
+
+            return render(request, page, {'stories': _Recipe})
+        else:
+            form = RecipeForm(request.POST)
+            return render(request, page, {'form': form})        
+
+    else:
+        page = 'recipe.html'
+
+        render(request, page, {'stories': _Recipe, 'disabled': True})
 
 def authorurl(request, id):
 
@@ -111,3 +156,14 @@ from django.contrib.auth import logout
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('homepage'))
+
+@login_required
+def favorite(request, id):
+    if request.method == 'GET':
+        u = request.user
+        _Recipe = Recipe.objects.get(id=id)
+
+        _Recipe.is_fave = not _Recipe.is_fave
+        _Recipe.save()
+
+        return HttpResponseRedirect(f'/recipe/{id}')

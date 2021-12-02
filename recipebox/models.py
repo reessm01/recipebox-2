@@ -15,6 +15,7 @@ class Recipe(models.Model):
     time_required = models.CharField(max_length=20)
     instructions = models.TextField(blank=True, null=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    is_fave = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.title} - {self.author}"

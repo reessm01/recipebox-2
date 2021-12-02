@@ -10,8 +10,29 @@
 
 
 <h1>{{ stories.title }}</h1>
+<span>
+    Favorited: {{ stories.is_fave  }}
+</span>
 <h2>What it is: {{ stories.description}}</h2>
 <h2>How long: {{ stories.time_required }}</h2>
 <h2>How to make: {{ stories.instructions}}</h2>
 <h2>Chef: <a href="/author/{{ stories.author.id }}">{{ stories.author.name}}</a></h2>
 
+{% if disabled %}
+    <form action="/editrecipe/{{stories.id}}">
+        <button type="submit" disabled>Edit Recipe</button>
+    </form>
+{% else %}
+    {% if stories.is_fave %}
+        <form action="/favorite/{{stories.id}}">
+            <button type="submit">Unfave</button>
+        </form>
+    {% else %}
+        <form action="/favorite/{{stories.id}}">
+            <button type="submit">Fave</button>
+        </form>
+    {% endif %}
+    <form action="/editrecipe/{{stories.id}}">
+        <button type="submit">Edit Recipe</button>
+    </form>
+{% endif %}

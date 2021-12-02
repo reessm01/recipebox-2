@@ -3,6 +3,13 @@
 <a href="/addrecipe">add recipe</a>
 <a href="/addauthor">add Author</a>
 
+<h2>All Recipes</h2>
 {% for foo in stories %}
-<h2><a href="/recipe/{{ foo.id }}">{{ foo.title }}</a> by {{foo.author.name}} </h2>
+    <h2><a href="/recipe/{{ foo.id }}">{{ foo.title }}</a> by {{foo.author.name}} </h2>
+{% endfor %}
+<h2>Favorites</h2>
+{% for foo in stories %}
+    {% if foo.is_fave %}
+        <h2><a href="/recipe/{{ foo.id }}">{{ foo.title }}</a> by {{foo.author.name}}</h2>
+    {% endif %}
 {% endfor %}
